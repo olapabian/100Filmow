@@ -35,7 +35,7 @@ public class MainCollector {
     @ResponseBody
     public String Collecting() {
         int number = 0;
-        for (int filmId = 1; number < 100; filmId++) {
+        for (int filmId = 1; number <= 100; filmId++) {
             System.out.println(filmId);
             movieTemp = new Movie();
             filmwebMovieTemp = new FilmwebMovie();
@@ -45,7 +45,7 @@ public class MainCollector {
             try {
                 URL url = new URL("https://www.filmweb.pl/api/v1/film/" + filmId + "/rating");
 
-                com.example.DataCollector.Collectors.HttpCollector ratingCollector = new com.example.DataCollector.Collectors.HttpCollector(url);
+                com.example0.Filmow.Collectors.HttpCollector ratingCollector = new com.example0.Filmow.Collectors.HttpCollector(url);
                 ratingCollector.Collect();
                 if (!ratingCollector.getResponse().isEmpty()) {
                     String response = String.valueOf(ratingCollector.getResponse());
@@ -53,7 +53,6 @@ public class MainCollector {
                     Gson gson = new Gson();
                     // Po deserializacji JSONa do obiektu RatingRequest
                     RatingRequest ratingRequest = gson.fromJson(response, RatingRequest.class);
-
                     // Pobierz ocene z obiektu ratingRequest
                     // Konwersja wartości z ratingRequest.getRate() na String
                     String ratingAsString = String.valueOf(ratingRequest.getRate());
@@ -62,15 +61,16 @@ public class MainCollector {
                     // Pobierz liczbe ocen z obiektu ratingRequest
                     filmwebMovieTemp.setRatingCount(ratingRequest.getCount());
                     double rating = Double.parseDouble(filmwebMovieTemp.getRating());
-                    if (rating < 8.0) //jesli ocena jest mniejsza niz 8 idziemy dalej (nie bierzemy tego filmuu)
+                    if (rating < 7.5) //jesli ocena jest mniejsza niz 8 idziemy dalej (nie bierzemy tego filmuu)
                     {
                         continue;
                     }
-                    if (filmwebMovieTemp.getRatingCount() < 300000)//jesli liczba ocen jest mniejsza niz 200 000 idziemy dalej (nie bierzemy tego filmuu)
+                    if (filmwebMovieTemp.getRatingCount() < 200000)//jesli liczba ocen jest mniejsza niz 200 000 idziemy dalej (nie bierzemy tego filmuu)
                     {
                         continue;
                     }
                 }
+                else continue;
 
                 //----------------Zapisuje ID filmwebowe------------------------------------
                 movieTemp.setFilmwebId((long) filmId);
@@ -79,7 +79,7 @@ public class MainCollector {
                 //----------------------------Request info (pobieram tylko tytuł)-------------------------------------
                 URL url1 = new URL("https://www.filmweb.pl/api/v1/film/" + filmId + "/info");
 
-                com.example.DataCollector.Collectors.HttpCollector infoCollector1 = new com.example.DataCollector.Collectors.HttpCollector(url1);
+                com.example0.Filmow.Collectors.HttpCollector infoCollector1 = new com.example0.Filmow.Collectors.HttpCollector(url1);
                 infoCollector1.Collect();
                 if (!infoCollector1.getResponse().isEmpty()) {
                     String response1 = String.valueOf(infoCollector1.getResponse());

@@ -16,23 +16,23 @@ import java.util.Optional;
 public class HomeController {
     private final FilmwebMovieRepository filmwebMovieRepository;
     private final MovieRepository movieRepository;
-    String dane1;
-    String dane2;
+
     @GetMapping("/")
     @ResponseBody
     public String Display(){
         Optional<Movie> movieOptional = movieRepository.findById((long)952);
-
+        String dane1 = new String();
+        String dane2 = new String();
         if (movieOptional.isPresent()) {
             Movie movie = movieOptional.get();
-            dane1 = movie.toString();
+            dane1 = "\ntytul " + movie.getTitle() + "\nid generowane " + movie.getId() + "\nfilmweb id " + movie.getFilmwebId();
             Optional<FilmwebMovie> filmwebMovie = Optional.ofNullable(filmwebMovieRepository.findByFilmwebId(movie.getFilmwebId()));
             if (filmwebMovie.isPresent()) {
                 FilmwebMovie filmwebMovie1 = filmwebMovie.get();
-                dane2 = filmwebMovie1.toString();
+                dane2 = "\nocena " + filmwebMovie1.getRating() + "\n liczba ocen " + filmwebMovie1.getRatingCount();
             }
         }
 
-        return "Przykłądowe wypisanie Filmu o id (generowanym):" + dane1 + dane2 ;
+        return  dane1 + dane2 ;
     }
 }

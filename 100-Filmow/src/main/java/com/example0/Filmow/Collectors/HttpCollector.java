@@ -1,4 +1,4 @@
-package com.example.DataCollector.Collectors;
+package com.example0.Filmow.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
